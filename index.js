@@ -1,11 +1,13 @@
 import express, { response } from "express";
 import { MongoClient } from "mongodb";
+import cors from 'cors';
 import dotenv from "dotenv";
 import { dessertsRouter } from "./routes/desserts.js";
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 // const MONGO_URL = "mongodb://localhost";
 // const MONGO_URL = "mongodb://127.0.0.1";
