@@ -1,5 +1,5 @@
 import express from "express";
-import {client} from "../index.js";
+import { getAllDesserts, getDessertById, addDesserts, deleteDessertById, udateDessertById } from "./dessertFunctions.js";
 const router =express.Router();
 
  router.get('/',async function (req, res) {
@@ -8,7 +8,7 @@ const router =express.Router();
    // }
    console.log(req.query);
  
-  const desserts = await client.db("GID_project").collection("DessertsData").find(req.query).toArray()
+  const desserts = await getAllDesserts(req)
      res.send(desserts)
    })
  
@@ -16,7 +16,7 @@ const router =express.Router();
      const {id} = req.params;
      console.log(req.params,id);
      //  const item = desserts.filter((mi)=> mi.id==id);
-     const item= await client.db("GID_project").collection("DessertsData").findOne({id:parseInt(id)})
+     const item= await getDessertById(id)
      
      item ? res.send(item) : res.status(400).send({msg : "menu item not found"});
    })
@@ -26,14 +26,14 @@ const router =express.Router();
  
      const data= req.body;
    console.log(data);
-   const result = await client.db("GID_project").collection("DessertsData").insertMany(data);
+   const result = await addDesserts(data);
      res.send(result);})
      
      router.delete('/:id', async function (req, res) {
        const {id} = req.params;
        
        
-       const item= await client.db("GID_project").collection("DessertsData").deleteOne({id:parseInt(id)})
+       const item= await deleteDessertById(id);
        
        item.deletedCount>0 ? res.send(item) : res.status(400).send({msg : "menu item not found"});
      })
@@ -43,10 +43,12 @@ const router =express.Router();
        console.log(req.params,id)
        const data=req.body;
    
-       const result = await client.db("GID_project").collection("DessertsData").updateOne({id:parseInt(id)},{$set:data});
+       const result = await udateDessertById(id, data);
      res.send(result);
        
      })
  
 
      export const dessertsRouter=router;
+
+
