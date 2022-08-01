@@ -24,7 +24,7 @@ const client = await createConnection();
 // app.get('/',  function (req, res) {
 //   res.send('Hello World')
 // })
-app.get('/',async function (req, res) {
+app.get('/desserts',async function (req, res) {
   // if(req.query.rating){
   //   req.query.rating=+req.query.rating;
   // }
@@ -34,7 +34,7 @@ app.get('/',async function (req, res) {
     res.send(desserts)
   })
 
-  app.get('/:id', async function (req, res) {
+  app.get('/desserts/:id', async function (req, res) {
     const {id} = req.params;
     console.log(req.params,id);
     //  const item = desserts.filter((mi)=> mi.id==id);
@@ -44,14 +44,14 @@ app.get('/',async function (req, res) {
   })
  
 
-  app.post('/',async function (req, res) {
+  app.post('/desserts',async function (req, res) {
 
     const data= req.body;
   console.log(data);
   const result = await client.db("GID_project").collection("DessertsData").insertMany(data);
     res.send(result);})
     
-    app.delete('/:id', async function (req, res) {
+    app.delete('/desserts/:id', async function (req, res) {
       const {id} = req.params;
       
       
@@ -60,7 +60,7 @@ app.get('/',async function (req, res) {
       item.deletedCount>0 ? res.send(item) : res.status(400).send({msg : "menu item not found"});
     })
 
-    app.put('/:id', async function (req, res) {
+    app.put('/desserts/:id', async function (req, res) {
       const {id} = req.params;
       console.log(req.params,id)
       const data=req.body;
