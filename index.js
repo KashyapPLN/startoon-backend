@@ -21,9 +21,9 @@ async function createConnection() {
 
 const client = await createConnection();
 
-// app.get('/',  function (req, res) {
-//   res.send('Hello World')
-// })
+ app.get('/',  function (req, res) {
+   res.send('Hello World')
+ })
 app.get('/desserts',async function (req, res) {
   // if(req.query.rating){
   //   req.query.rating=+req.query.rating;
