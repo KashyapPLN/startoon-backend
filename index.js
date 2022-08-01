@@ -25,8 +25,12 @@ const client = await createConnection();
 //   res.send('Hello World')
 // })
 app.get('/',async function (req, res) {
+  // if(req.query.rating){
+  //   req.query.rating=+req.query.rating;
+  // }
+  console.log(req.query);
 
- const desserts = await client.db("GID_project").collection("DessertsData").find({}).toArray()
+ const desserts = await client.db("GID_project").collection("DessertsData").find(req.query).toArray()
     res.send(desserts)
   })
 
@@ -47,6 +51,23 @@ app.get('/',async function (req, res) {
   const result = await client.db("GID_project").collection("DessertsData").insertMany(data);
     res.send(result);})
     
+    app.delete('/:id', async function (req, res) {
+      const {id} = req.params;
+      
+      
+      const item= await client.db("GID_project").collection("DessertsData").deleteOne({id:parseInt(id)})
+      
+      item.deletedCount>0 ? res.send(item) : res.status(400).send({msg : "menu item not found"});
+    })
 
+    app.put('/:id', async function (req, res) {
+      const {id} = req.params;
+      console.log(req.params,id)
+      const data=req.body;
+  
+      const result = await client.db("GID_project").collection("DessertsData").updateOne({id:parseInt(id)},{$set:data});
+    res.send(result);
+      
+    })
 
 app.listen(PORT,()=>console.log(`App Started in ${PORT}`));
