@@ -3,6 +3,9 @@ import { MongoClient } from "mongodb";
 import cors from 'cors';
 import dotenv from "dotenv";
 import { dessertsRouter } from "./routes/desserts.js";
+import {usersRouter} from "./routes/users.js";
+
+
 dotenv.config();
 
 const app = express();
@@ -29,5 +32,9 @@ app.get('/',  function (req, res) {
 })
 
 app.use("/desserts",dessertsRouter)
+app.use("/user",usersRouter)
 
 app.listen(PORT,()=>console.log(`App Started in ${PORT}`));
+
+
+

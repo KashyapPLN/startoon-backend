@@ -1,4 +1,5 @@
 import express from "express";
+import {auth} from "../middleware/auth.js"
 import { getAllDesserts, getDessertById, addDesserts, deleteDessertById, udateDessertById } from "./dessertFunctions.js";
 const router =express.Router();
 
