@@ -11,7 +11,9 @@ export async function updateUser(_id,data) {
 export async function updateUserPassword(_id,data) {
     return await client.db("GID_project").collection("signupData").updateOne({ _id: _id }, { $set: data });
 }
-
+export async function updateUserPhoneNumber(_id,data) {
+    return await client.db("GID_project").collection("signupData").updateOne({ _id: _id }, { $set: data });
+}
 export async function getUserByName(userName) {
     return await client.db("GID_project").collection("signupData").findOne({ _id:userName });
 }

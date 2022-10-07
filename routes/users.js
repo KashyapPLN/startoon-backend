@@ -1,9 +1,10 @@
 import express, { response } from "express";
 import { createUser,getUserByName, updateUser,addAddress,updateAddressById,deleteAddressById, getAddressById,
-   createOrder,deleteOrderById, getAllOrdersItemsByUserName,getOrderById,updateUserPassword } from "./usersFunctions.js";
+   createOrder,deleteOrderById, getAllOrdersItemsByUserName,getOrderById,updateUserPassword,updateUserPhoneNumber } from "./usersFunctions.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
+// import nodemailer from 'nodemailer';
 
 const router =express.Router();
 
@@ -29,6 +30,29 @@ async function genHashedPassword(password){
   const result = await createUser({_id:userName,password:hashedPassword,phoneNumber:phoneNumber,email:email});
   //res.send(result);
   res.status(200).send({message:"Registration Successful"})
+  // var transporter = nodemailer.createTransport({
+  //   service: 'gmail',
+  //   auth: {
+  //     user: 'kashyap.pln@gmail.com',
+  //     pass: 'Kashyap@40'
+  //   }
+  // });
+  
+  // var mailOptions = {
+  //   from: 'kashyap.pln@gmail.com',
+  //   to: 'kashyap.pln@outlook.com',
+  //   subject: 'Welcome Message',
+  //   text: 'WelCome to The Great Indian Dessert! Enjoy Our Wide Range Of Desserts'
+  // };
+  
+  // transporter.sendMail(mailOptions, function(error, info){
+  //   if (error) {
+  //     console.log(error);
+  //   } else {
+  //     console.log('Email sent: ' + info.response);
+  //   }
+  // });
+
     }catch(ex){
       console.log("asgahsgah")
         if(ex.code===11000){
@@ -42,7 +66,7 @@ async function genHashedPassword(password){
 
    )
 
-   router.post('/update/:_id',async function (req, res) {
+   router.put('/update/:_id',async function (req, res) {
     const {_id} = req.params;
     console.log(req.params,_id);
     const {userName,password,phoneNumber,email}= req.body;
@@ -88,6 +112,28 @@ async function genHashedPassword(password){
      }
    }
  
+})
+router.put('/update-phone/:_id',async function (req, res) {
+  const {_id} = req.params;
+  console.log(req.params,_id);
+  const {phoneNumber}= req.body;
+if(phoneNumber.length<10){
+ res.status(400).send({message:"Phone number must contain a mininmum of 10 numbers"})
+}
+
+ 
+ 
+
+ try{
+const result = await updateUserPhoneNumber(_id,{phoneNumber});
+res.send(result);
+ }catch(ex){
+   console.log("asgahsgah"+ex)
+     if(ex.code===11000){
+     res.status(400).send({message:"cannot change number "})
+   }
+ }
+
 }
 
   )
