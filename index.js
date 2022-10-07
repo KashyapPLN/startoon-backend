@@ -4,13 +4,14 @@ import cors from 'cors';
 import dotenv from "dotenv";
 import { dessertsRouter } from "./routes/desserts.js";
 import {usersRouter} from "./routes/users.js";
-
+import {cartRouter} from "./routes/cart.js";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+
 
 // const MONGO_URL = "mongodb://localhost";
 // const MONGO_URL = "mongodb://127.0.0.1";
@@ -33,8 +34,36 @@ app.get('/',  function (req, res) {
 
 app.use("/desserts",dessertsRouter)
 app.use("/user",usersRouter)
+app.use("/cart",cartRouter)
 
 app.listen(PORT,()=>console.log(`App Started in ${PORT}`));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
