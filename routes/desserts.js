@@ -1,6 +1,6 @@
 import express from "express";
 import {auth} from "../middleware/auth.js"
-import { getAllDesserts, getDessertById, addDesserts, deleteDessertById, udateDessertById } from "./dessertFunctions.js";
+import { getAllDesserts, getDessertById, addDesserts, deleteDessertById, udateDessertById,addSingleDessert } from "./dessertFunctions.js";
 const router =express.Router();
 
  router.get('/',async function (req, res) {
@@ -48,7 +48,12 @@ const router =express.Router();
      res.send(result);
        
      })
+     router.post('/',async function (req, res) {
  
+      const data= req.body;
+    console.log(data);
+    const result = await addSingleDessert(data);
+      res.send(result);})
 
      export const dessertsRouter=router;
 

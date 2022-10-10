@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import { dessertsRouter } from "./routes/desserts.js";
 import {usersRouter} from "./routes/users.js";
 import {cartRouter} from "./routes/cart.js";
-// import nodemailer from 'nodemailer';
+
 dotenv.config();
 
 const app = express();

@@ -15,3 +15,6 @@ export async function getDessertById(id) {
 export async function getAllDesserts(req) {
     return await client.db("GID_project").collection("DessertsData").find(req.query).toArray();
 }
+export async function addSingleDessert(data) {
+    return await client.db("GID_project").collection("DessertsData").insertOne(data);
+}

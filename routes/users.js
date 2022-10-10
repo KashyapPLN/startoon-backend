@@ -4,7 +4,7 @@ import { createUser,getUserByName, updateUser,addAddress,updateAddressById,delet
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
-// import nodemailer from 'nodemailer';
+ import nodemailer from 'nodemailer';
 
 const router =express.Router();
 
@@ -30,28 +30,28 @@ async function genHashedPassword(password){
   const result = await createUser({_id:userName,password:hashedPassword,phoneNumber:phoneNumber,email:email});
   //res.send(result);
   res.status(200).send({message:"Registration Successful"})
-  // var transporter = nodemailer.createTransport({
-  //   service: 'gmail',
-  //   auth: {
-  //     user: 'kashyap.pln@gmail.com',
-  //     pass: 'Kashyap@40'
-  //   }
-  // });
+  var transporter = nodemailer.createTransport({
+    service: 'hotmail',
+    auth: {
+      user: 'kashyap.pln@outlook.com',
+      pass: 'Kashyap@40'
+    }
+  });
   
-  // var mailOptions = {
-  //   from: 'kashyap.pln@gmail.com',
-  //   to: 'kashyap.pln@outlook.com',
-  //   subject: 'Welcome Message',
-  //   text: 'WelCome to The Great Indian Dessert! Enjoy Our Wide Range Of Desserts'
-  // };
+  var mailOptions = {
+    from: 'kashyap.pln@outlook.com',
+    to: email,
+    subject: 'Welcome Message',
+    text: 'Welcome to The Great Indian Dessert ! Enjoy Our Wide Range Of Desserts.'
+  };
   
-  // transporter.sendMail(mailOptions, function(error, info){
-  //   if (error) {
-  //     console.log(error);
-  //   } else {
-  //     console.log('Email sent: ' + info.response);
-  //   }
-  // });
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
 
     }catch(ex){
       console.log("asgahsgah")
