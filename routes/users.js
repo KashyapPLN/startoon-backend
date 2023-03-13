@@ -1,6 +1,6 @@
 import express, { response } from "express";
 import { createUser,getUserByName, updateUser,addAddress,updateAddressById,deleteAddressById, getAddressById,
-   createOrder,deleteOrderById, getAllOrdersItemsByUserName,getOrderById,updateUserPassword,updateUserPhoneNumber } from "./usersFunctions.js";
+   createOrder,deleteOrderById, getAllOrdersItemsByUserName,getOrderById,updateUserPassword,updateUserPhoneNumber} from "./usersFunctions.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
@@ -253,7 +253,7 @@ console.log("Exception is " ,ex)
             res.send(currentOrder)
           })
 
-    
+         
 
      export const usersRouter=router;
 

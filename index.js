@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { dessertsRouter } from "./routes/desserts.js";
 import {usersRouter} from "./routes/users.js";
 import {cartRouter} from "./routes/cart.js";
+// import { picRouter } from "./routes/userPics.js";
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.get('/',  function (req, res) {
 app.use("/desserts",dessertsRouter)
 app.use("/user",usersRouter)
 app.use("/cart",cartRouter)
+
 
 app.listen(PORT,()=>console.log(`App Started in ${PORT}`));
 

@@ -47,3 +47,5 @@ export async function getAllOrdersItemsByUserName(userName) {
 export async function getOrderById(_id) {
     return await client.db("GID_project").collection("orders").findOne({ _id:_id });
 }
+
+
