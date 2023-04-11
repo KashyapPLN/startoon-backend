@@ -1,11 +1,15 @@
 import express, { response } from "express";
-import { createUser,getUserByName, updateUser,updateUserPassword,updateUserPhoneNumber} from "./usersFunctions.js";
+import { createUser,getUserByName,updateUserPassword,createUserFiles,getAllFiles,getFilesById} from "./usersFunctions.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
+import multer from 'multer';
 
 
 const router =express.Router();
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
+
 
 async function genHashedPassword(pwd){
     const NO_OF_ROUNDS = 10;
@@ -15,14 +19,14 @@ async function genHashedPassword(pwd){
     
     }
     
-   router.post('/marlotask/signup',async function (req, res) {
+   router.post('/cultureos/signup',async function (req, res) {
  
-     const {fN,mN,lN,pwd,phn,email,occu,comp,dob}= req.body;
+     const {user,pwd,email}= req.body;
     
     const hashedPassword = await genHashedPassword(pwd);
    
     try{
-  const result = await createUser({_id:fN,pwd:hashedPassword,phn:phn,email:email,dob,comp,lN,mN});
+  const result = await createUser({_id:user,pwd:hashedPassword,email:email});
   //res.send(result);
   res.status(200).send({message:"Registration Successful"})
   
@@ -39,30 +43,9 @@ async function genHashedPassword(pwd){
 
    )
 
-   router.put('/marlotask/update/:_id',async function (req, res) {
-    const {_id} = req.params;
-    console.log(req.params,_id);
-    const {userName,password,phoneNumber,email}= req.body;
 
 
-   
-   const hashedPassword = await genHashedPassword(password);
-  
-   try{
- const result = await updateUser(_id,{password:hashedPassword,phoneNumber:phoneNumber,email:email});
- res.send(result);
-   }catch(ex){
-     console.log("asgahsgah"+ex)
-       if(ex.code===11000){
-       res.status(400).send({message:"Username already exists "})
-     }
-   }
- 
-}
-
-  )
-
-  router.put('/marlotask/update-password/:_id',async function (req, res) {
+  router.put('/cultureos/update-password/:_id',async function (req, res) {
     const {_id} = req.params;
     console.log(req.params,_id);
     const {pwd}= req.body;
@@ -82,37 +65,14 @@ async function genHashedPassword(pwd){
    }
  
 })
-router.put('/marlotask/update-phone/:_id',async function (req, res) {
-  const {_id} = req.params;
-  console.log(req.params,_id);
-  const {phn}= req.body;
-if(phn.length<10){
- res.status(400).send({message:"Phone number must contain a mininmum of 10 numbers"})
-}
 
+
+
+   router.post('/cultureos/login',async function (req, res) {
  
- 
+    const {user,pwd}= req.body;
 
- try{
-const result = await updateUserPhoneNumber(_id,{phn});
-res.send(result);
- }catch(ex){
-   console.log("asgahsgah"+ex)
-     if(ex.code===11000){
-     res.status(400).send({message:"cannot change number "})
-   }
- }
-
-}
-
-  )
-
-
-   router.post('/marlotask/login',async function (req, res) {
- 
-    const {fN,pwd}= req.body;
-
-const userFromDb = await getUserByName(fN);
+const userFromDb = await getUserByName(user);
 console.log(userFromDb);
 if(!userFromDb){
   res.status(401).send({message:"Invalid Credentials"})
@@ -125,14 +85,14 @@ if(!userFromDb){
 console.log('hi',token)
   const decoded = jwt.verify(token, 'my_secret_key');
    console.log(decoded);
-  res.send({message:"Login Successful",token:token,user:fN})
+  res.send({message:"Login Successful",token:token,user:user})
  } else{
   res.status(401).send({message:"Invalid Credentials"})
  }
 }
   })
  
-  router.get('/marlotask/validateuser/:key',async function(req,res){
+  router.get('/cultureos/validateuser/:key',async function(req,res){
     console.log("hello")
     const {key} = req.params;
     console.log(key);
@@ -140,6 +100,38 @@ console.log('hi',token)
     
     res.send({message:"Successful",user:decoded})
   })
+
+  router.post('/cultureos/upload',upload.fields([{ name: 'pdf', maxCount: 1 }, { userId: 'userId', maxCount: 1 }]),async function (req, res) {
+    const userId = req.body.userId;
+    const pdfBuffer = req.files['pdf'][0].buffer;
+    
+    try{
+    const result = await createUserFiles(userId,pdfBuffer);
+    res.send(`PDF file uploaded with ID: ${result.insertedId}`);
+    }catch(err){
+      console.error(err);
+      res.status(500).send('An error occurred while uploading the PDF file');
+    }
+
+  })
+  router.get('/cultureos/files',async function (req, res) {
+    
+    console.log(req.query);
+  
+   const data = await getAllFiles(req)
+      res.send(data)
+    })
+
+    router.get('/cultureos/files/:userId', async function (req, res) {
+      const {userId} = req.params;
+      console.log(req.params,userId);
+      
+      const files= await getFilesById(userId)
+      
+      files ? res.send(files) : res.status(400).send({msg : "no files"});
+    })
+ 
+  
   
 
 
