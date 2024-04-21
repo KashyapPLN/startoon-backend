@@ -2,48 +2,25 @@ import { client } from "../index.js";
 
 
 export async function createUser(data) {
-    return await client.db("GID_project").collection("signupData").insertOne(data);
+    return await client.db("startoon_app").collection("signupData").insertOne(data);
 }
 
-export async function updateUser(_id,data) {
-    return await client.db("GID_project").collection("signupData").updateOne({ _id: _id }, { $set: data });
-}
-export async function updateUserPassword(_id,data) {
-    return await client.db("GID_project").collection("signupData").updateOne({ _id: _id }, { $set: data });
-}
-export async function updateUserPhoneNumber(_id,data) {
-    return await client.db("GID_project").collection("signupData").updateOne({ _id: _id }, { $set: data });
-}
-export async function getUserByName(userName) {
-    return await client.db("GID_project").collection("signupData").findOne({ _id:userName });
+export async function getUserByName(email) {
+    return await client.db("startoon_app").collection("signupData").findOne({ _id:email });
 }
 
-export async function addAddress(req) {
-    return await client.db("GID_project").collection("address").insertOne(req);
-}
-
-export async function updateAddressById(_id, data) {
-    return await client.db("GID_project").collection("address").updateOne({ _id: _id }, { $set: data });
-}
-
-export async function deleteAddressById(_id) {
-    return await client.db("GID_project").collection("address").deleteOne({ _id: _id });
-}
-
-export async function getAddressById(_id) {
-    return await client.db("GID_project").collection("address").findOne({ _id:_id});
-}
-export async function createOrder(req) {
-    return await client.db("GID_project").collection("orders").insertOne(req);
-}
-export async function deleteOrderById(_id) {
-    return await client.db("GID_project").collection("orders").deleteOne({ _id:_id});
-}
-
-export async function getAllOrdersItemsByUserName(userName) {
-    return await client.db("GID_project").collection("orders").find({userName:userName} ).toArray();
-}
-
-export async function getOrderById(_id) {
-    return await client.db("GID_project").collection("orders").findOne({ _id:_id });
-}
+export async function updateUserLoginInfo(email) {
+    const user = await getUserByName(email);
+    const loginInfo = {
+      loginDate: new Date(),
+      count: user.loginInfo ? user.loginInfo.count + 1 : 1
+    };
+    await client.db("startoon_app").collection("signupData").updateOne(
+      { _id: email },
+      { $set: { loginInfo: loginInfo } }
+    );
+  }
+  
+  export async function saveLoginInfo(loginInfo) {
+    await client.db("startoon_app").collection("loginInfo").insertOne(loginInfo);
+  }
